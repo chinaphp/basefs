@@ -84,15 +84,16 @@ else
   echo "download containerd version ${containerd_version}"
 fi
 
-registry_tarball_amd64_url="${install_url}/${registry_tarball_amd64}"
-registry_tarball_arm64_url="${install_url}/${registry_tarball_arm64}"
+registry_tarball_amd64_url="https://github.com/distribution/distribution/releases/download/v2.8.3/registry_2.8.3_linux_amd64.tar.gz"
+registry_tarball_arm64_url="https://github.com/distribution/distribution/releases/download/v2.8.3/registry_2.8.3_linux_arm64.tar.gz"
 echo "download registry tarball ${registry_tarball_amd64_url}"
 
 mkdir -p {arm,amd}64/{cri,bin,images}
 
-##https://www.netfilter.org/pub/conntrack-tools/conntrack-tools-1.4.4.tar.bz2
-wget "${install_url}/linux-amd64/conntrack-${conntrack_version:-}/bin/conntrack" && mv conntrack "amd64/bin"
-wget "${install_url}/linux-arm64/conntrack-${conntrack_version}/bin/conntrack" && mv conntrack "arm64/bin"
+echo "download conntrack version ${conntrack_version}"
+mkdir -p amd64/bin arm64/bin
+wget -q "https://mirrors.edge.kernel.org/debian/pool/main/c/conntrack-tools/conntrack-tools_${conntrack_version}-3_amd64.deb" -O /tmp/conntrack-amd64.deb && dpkg-deb -x /tmp/conntrack-amd64.deb /tmp/conntrack-amd64 && mv /tmp/conntrack-amd64/usr/sbin/conntrack amd64/bin/ && rm -rf /tmp/conntrack-amd64 /tmp/conntrack-amd64.deb
+wget -q "https://mirrors.edge.kernel.org/debian/pool/main/c/conntrack-tools/conntrack-tools_${conntrack_version}-3_arm64.deb" -O /tmp/conntrack-arm64.deb && dpkg-deb -x /tmp/conntrack-arm64.deb /tmp/conntrack-arm64 && mv /tmp/conntrack-arm64/usr/sbin/conntrack arm64/bin/ && rm -rf /tmp/conntrack-arm64 /tmp/conntrack-arm64.deb
 
 echo "download gperf version ${gperf_version}"
 mkdir -p "rootfs/lib"
@@ -117,9 +118,10 @@ echo "download cri with ${cri} : ${cri_tarball_amd64_url}"
 wget -q "${cri_tarball_amd64_url}" && mv "${cri_tarball_amd64}" "amd64/cri/docker.tar.gz"
 wget -q "${cri_tarball_arm64_url}" && mv "${cri_tarball_arm64}" "arm64/cri/docker.tar.gz"
 
-echo "download registry image ${registry_tarball_amd64}"
-wget -q "${registry_tarball_amd64_url}" && mv "${registry_tarball_amd64}" "amd64/images"
-wget -q "${registry_tarball_arm64_url}" && mv "${registry_tarball_arm64}" "arm64/images"
+echo "download registry image from Docker Hub"
+mkdir -p amd64/images arm64/images
+docker pull --platform linux/amd64 registry:2.8.3 && docker save registry:2.8.3 -o amd64/images/registry.tar.gz && docker rmi registry:2.8.3
+docker pull --platform linux/arm64 registry:2.8.3 && docker save registry:2.8.3 -o arm64/images/registry.tar.gz && docker rmi registry:2.8.3
 
 echo "download kubeadm kubectl kubelet version ${kube_install_version:-}"
 
