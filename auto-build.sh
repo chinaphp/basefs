@@ -78,7 +78,7 @@ version_compare() { printf '%s\n%s\n' "$2" "$1" | sort -V -C; } ## version_compa
 ARCH=$(case "$(uname -m)" in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo "unsupported architecture" "$(uname -m)" && exit 1 ;; esac)
 
 if [[ -z "$docker_namespace" ]]; then
-  docker_namespace="markwzhang"
+  docker_namespace="chinaphp"
 fi
 
 if [[ -z "$dockerRegistry" ]]; then
