@@ -25,7 +25,7 @@ jobs:
           echo "info=$(grep 'cri:' autobuild.log)" >> $GITHUB_OUTPUT
 
       - name: Success Commit
-        uses: peter-evans/create-or-update-comment@v1
+        uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |

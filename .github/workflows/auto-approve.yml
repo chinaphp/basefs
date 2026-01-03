@@ -12,7 +12,7 @@ jobs:
       issues: write
     steps:
       - name: Approve Pull Request
-        uses: juliangruber/approve-pull-request-action@v1
+        uses: juliangruber/approve-pull-request-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           number: 1
@@ -24,7 +24,7 @@ jobs:
       issues: write
     steps:
       - name: auto merge
-        uses: juliangruber/approve-pull-request-action@v1
+        uses: juliangruber/approve-pull-request-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           number: 1
