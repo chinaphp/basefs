@@ -3,7 +3,7 @@ kind: InitConfiguration
 localAPIEndpoint:
   bindPort: 6443
 nodeRegistration:
-  criSocket: { { CRI_SOCKET } }
+  criSocket: "{{CRI_SOCKET}}"
   taints: null
 
 ---

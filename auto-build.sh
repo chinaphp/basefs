@@ -129,9 +129,8 @@ if [[ "$cri" == "containerd" ]]; then
 else
   cri_socket="/var/run/dockershim.sock"
 fi
-escaped_cri_socket=$(echo "$cri_socket" | sed 's/\//\\\//g')
-sudo sed -i "s/{{CRI_SOCKET}}/${escaped_cri_socket}/g" rootfs/etc/kubeadm.yml
-sudo sed -i "s/{{CRI_SOCKET}}/${escaped_cri_socket}/g" rootfs/etc/kubeadm.yml.tmpl
+sed "s|{{CRI_SOCKET}}|$cri_socket|g" rootfs/etc/kubeadm.yml > rootfs/etc/kubeadm.yml.tmp && sudo mv rootfs/etc/kubeadm.yml.tmp rootfs/etc/kubeadm.yml
+sed "s|{{CRI_SOCKET}}|$cri_socket|g" rootfs/etc/kubeadm.yml.tmpl > rootfs/etc/kubeadm.yml.tmpl.tmp && sudo mv rootfs/etc/kubeadm.yml.tmpl.tmp rootfs/etc/kubeadm.yml.tmpl
 sudo sed -i "s/kubeadm.k8s.io\/v1beta2/$kubeadmApiVersion/g" rootfs/etc/kubeadm.yml
 sudo sed -i "s/kubeadm.k8s.io\/v1beta2/$kubeadmApiVersion/g" rootfs/etc/kubeadm.yml.tmpl
 sudo ./"${ARCH}"/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml"
