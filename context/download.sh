@@ -110,16 +110,16 @@ echo "download libseccomp version ${libseccomp_version}"
 curl -sLO "${libseccomp_tarball_url}" && mv "${libseccomp_tarball}" "rootfs/lib"
 
 echo "download nerdctl version ${nerdctl_version}"
-wget -q "${nerdctl_tarball_amd64_url}" && tar zxvf "${nerdctl_tarball_amd64}" -C "amd64/bin" --strip-components=1 || tar zxvf "${nerdctl_tarball_amd64}" -C "amd64/bin"
-wget -q "${nerdctl_tarball_arm64_url}" && tar zxvf "${nerdctl_tarball_arm64}" -C "arm64/bin" --strip-components=1 || tar zxvf "${nerdctl_tarball_arm64}" -C "arm64/bin"
+wget -q "https://github.com/containerd/nerdctl/releases/download/v${nerdctl_version}/nerdctl-${nerdctl_version}-linux-amd64.tar.gz" -O nerdctl-amd64.tar.gz && tar zxvf nerdctl-amd64.tar.gz -C "amd64/bin" --strip-components=1 && rm -f nerdctl-amd64.tar.gz
+wget -q "https://github.com/containerd/nerdctl/releases/download/v${nerdctl_version}/nerdctl-${nerdctl_version}-linux-arm64.tar.gz" -O nerdctl-arm64.tar.gz && tar zxvf nerdctl-arm64.tar.gz -C "arm64/bin" --strip-components=1 && rm -f nerdctl-arm64.tar.gz
 
 echo "download crictl version ${crictl_version}"
-wget -q "${crictl_tarball_amd64_url}" && tar zxvf "${crictl_tarball_amd64}" -C "amd64/bin"
-wget -q "${crictl_tarball_arm64_url}" && tar zxvf "${crictl_tarball_arm64}" -C "arm64/bin"
+wget -q "https://github.com/kubernetes-sigs/cri-tools/releases/download/v${crictl_version}/crictl-v${crictl_version}-linux-amd64.tar.gz" -O crictl-amd64.tar.gz && tar zxvf crictl-amd64.tar.gz -C "amd64/bin" && rm -f crictl-amd64.tar.gz
+wget -q "https://github.com/kubernetes-sigs/cri-tools/releases/download/v${crictl_version}/crictl-v${crictl_version}-linux-arm64.tar.gz" -O crictl-arm64.tar.gz && tar zxvf crictl-arm64.tar.gz -C "arm64/bin" && rm -f crictl-arm64.tar.gz
 
 echo "download seautil version ${seautil_version}"
-wget -q "${seautil_tarball_amd64_url}" && tar zxvf "${seautil_tarball_amd64}" -C "amd64/bin"
-wget -q "${seautil_tarball_arm64_url}" && tar zxvf "${seautil_tarball_arm64}" -C "arm64/bin"
+wget -q "https://github.com/sealerio/sealer/releases/download/v${seautil_version}/seautil-v${seautil_version}-linux-amd64.tar.gz" -O seautil-amd64.tar.gz && tar zxvf seautil-amd64.tar.gz -C "amd64/bin" && rm -f seautil-amd64.tar.gz
+wget -q "https://github.com/sealerio/sealer/releases/download/v${seautil_version}/seautil-v${seautil_version}-linux-arm64.tar.gz" -O seautil-arm64.tar.gz && tar zxvf seautil-arm64.tar.gz -C "arm64/bin" && rm -f seautil-arm64.tar.gz
 
 echo "download cri with ${cri} : ${cri_tarball_amd64_url}"
 wget -q "${cri_tarball_amd64_url}" && mv "${cri_tarball_amd64}" "amd64/cri/docker.tar.gz"

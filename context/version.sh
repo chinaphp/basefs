@@ -11,7 +11,7 @@ export gperf_version=${gperf_version:-"3.1"}
 
 export conntrack_version=${conntrack_version:-"1.4.4"}
 
-export nerdctl_version=${nerdctl_version:-"v1.6.2"}
+export nerdctl_version=${nerdctl_version:-"1.6.2"}
 
 export crictl_version=${crictl_version:-"1.30.0"}
 
