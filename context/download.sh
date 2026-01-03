@@ -91,8 +91,8 @@ else
   echo "download containerd version ${containerd_version}"
 fi
 
-registry_tarball_amd64_url="https://github.com/distribution/distribution/releases/download/v2.8.3/registry_2.8.3_linux_amd64.tar.gz"
-registry_tarball_arm64_url="https://github.com/distribution/distribution/releases/download/v2.8.3/registry_2.8.3_linux_arm64.tar.gz"
+registry_tarball_amd64_url="https://github.com/distribution/distribution/releases/download/v${registry_version}/registry_${registry_version}_linux_amd64.tar.gz"
+registry_tarball_arm64_url="https://github.com/distribution/distribution/releases/download/v${registry_version}/registry_${registry_version}_linux_arm64.tar.gz"
 echo "download registry tarball ${registry_tarball_amd64_url}"
 
 mkdir -p {arm,amd}64/{cri,bin,images}
@@ -127,8 +127,8 @@ wget -q "${cri_tarball_arm64_url}" && mv "${cri_tarball_arm64}" "arm64/cri/docke
 
 echo "download registry image from Docker Hub"
 mkdir -p amd64/images arm64/images
-docker pull --platform linux/amd64 registry:2.8.3 && docker save registry:2.8.3 -o amd64/images/registry.tar.gz && docker rmi registry:2.8.3
-docker pull --platform linux/arm64 registry:2.8.3 && docker save registry:2.8.3 -o arm64/images/registry.tar.gz && docker rmi registry:2.8.3
+docker pull --platform linux/amd64 registry:${registry_version} && docker save registry:${registry_version} -o amd64/images/registry.tar.gz && docker rmi registry:${registry_version}
+docker pull --platform linux/arm64 registry:${registry_version} && docker save registry:${registry_version} -o arm64/images/registry.tar.gz && docker rmi registry:${registry_version}
 
 echo "download kubeadm kubectl kubelet version ${kube_install_version:-}"
 

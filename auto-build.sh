@@ -124,6 +124,7 @@ else
 fi
 sudo sed -i "s/\"cluster.alpha.sealer.io\/container-runtime-type\"=\"[^\"]*\"/\"cluster.alpha.sealer.io\/container-runtime-type\"=\"$cri\"/g" Kubefile
 sudo sed -i "s/\"cluster.alpha.sealer.io\/container-runtime-version\"=\"[^\"]*\"/\"cluster.alpha.sealer.io\/container-runtime-version\"=\"$runtime_version\"/g" Kubefile
+sudo sed -i "s/registry:2.7.1/registry:${registry_version}/g" rootfs/scripts/init-registry.sh
 if [[ "$cri" == "containerd" ]]; then
   cri_socket="unix:///run/containerd/containerd.sock"
 else
