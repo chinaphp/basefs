@@ -117,6 +117,13 @@ sudo wget https://github.com/chinaphp/sealer/releases/download/v0.11.11/sealer-v
 sudo sed -i "s/v1.19.8/$k8s_version/g" rootfs/etc/kubeadm.yml ##change k8s_version
 sudo sed -i "s/v1.19.8/$k8s_version/g" rootfs/etc/kubeadm.yml.tmpl ##change k8s_version
 sudo sed -i "s/v1.19.8/$k8s_version/g" Kubefile ##change k8s_version
+if [[ "$cri" == "docker" ]]; then
+  runtime_version="$docker_version"
+else
+  runtime_version="$containerd_version"
+fi
+sudo sed -i "s/\"cluster.alpha.sealer.io\/container-runtime-type\"=\"[^\"]*\"/\"cluster.alpha.sealer.io\/container-runtime-type\"=\"$cri\"/g" Kubefile
+sudo sed -i "s/\"cluster.alpha.sealer.io\/container-runtime-version\"=\"[^\"]*\"/\"cluster.alpha.sealer.io\/container-runtime-version\"=\"$runtime_version\"/g" Kubefile
 if [[ "$cri" == "containerd" ]]; then sudo sed -i "s/\/var\/run\/dockershim.sock/unix:\/\/\/run\/containerd\/containerd.sock/g" rootfs/etc/kubeadm.yml; fi
 if [[ "$cri" == "containerd" ]]; then sudo sed -i "s/\/var\/run\/dockershim.sock/unix:\/\/\/run\/containerd\/containerd.sock/g" rootfs/etc/kubeadm.yml.tmpl; fi
 sudo sed -i "s/kubeadm.k8s.io\/v1beta2/$kubeadmApiVersion/g" rootfs/etc/kubeadm.yml
