@@ -5,6 +5,9 @@ disabled_plugins = []
     sandbox_image = "sea.hub:5000/pause:3.9"
     [plugins."io.containerd.grpc.v1.cri".registry]
       config_path = "/etc/docker/certs.d/"
+    [plugins."io.containerd.grpc.v1.cri".cni]
+      bin_dir = "/opt/cni/bin"
+      conf_dir = "/etc/cni/net.d"
     [plugins."io.containerd.grpc.v1.cri".containerd]
       [plugins."io.containerd.grpc.v1.cri".containerd.runtimes]
         [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
