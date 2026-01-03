@@ -75,15 +75,18 @@ done
 }
 
 check_registry() {
-    n=1
-    while (( n <= 3 ))
+    local n=1
+    while (( n <= 5 ))
     do
-        registry_status=$("$CRI_BIN" inspect --format '{{json .State.Status}}' sealer-registry)
-        if [[ "$registry_status" == \"running\" ]]; then
-            break
+        registry_status=$("$CRI_BIN" inspect --format '{{.State.Status}}' "$container" 2>/dev/null | tail -n 1 || echo "unknown")
+        echo "Checking registry status (attempt $n): $registry_status"
+        if [[ "$registry_status" == "running" ]]; then
+            return 0
         fi
-        if [[ $n -eq 3 ]]; then
+        if [[ $n -eq 5 ]]; then
            echo "sealer-registry is not running, status: $registry_status"
+           echo "Recent logs from $container:"
+           "$CRI_BIN" logs "$container" 2>&1 | tail -n 20 || true
            exit 1
         fi
         (( n++ ))
@@ -94,8 +97,10 @@ check_registry() {
 load_images
 
 ## rm container if exist.
+echo "Cleaning up old registry container..."
+"$CRI_BIN" rm -f "$container" 2>/dev/null || true
 if [ "$("$CRI_BIN" ps -aq -f name=$container)" ]; then
-    "$CRI_BIN" rm -f $container
+    "$CRI_BIN" ps -aq -f name=$container | xargs "$CRI_BIN" rm -f 2>/dev/null || true
 fi
 
 regArgs="-d --restart=always \
