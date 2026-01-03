@@ -19,9 +19,17 @@ set -x
 # Detect CRI tool
 if command -v nerdctl >/dev/null 2>&1; then
     CRI_BIN="nerdctl"
+elif [ -f "$(dirname "$0")/../bin/nerdctl" ]; then
+    CRI_BIN="$(dirname "$0")/../bin/nerdctl"
+elif [ -f "/usr/bin/nerdctl" ]; then
+    CRI_BIN="/usr/bin/nerdctl"
+elif [ -f "/usr/local/bin/nerdctl" ]; then
+    CRI_BIN="/usr/local/bin/nerdctl"
 else
     CRI_BIN="docker"
 fi
+
+echo "Using CRI_BIN: $CRI_BIN"
 
 # prepare registry storage as directory
 # shellcheck disable=SC2046
