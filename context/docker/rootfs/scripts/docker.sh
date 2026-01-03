@@ -48,7 +48,7 @@ disable_selinux() {
 load_images() {
   for image in "$image_dir"/*; do
     if [ -f "${image}" ]; then
-      docker load -q -i "${image}"
+      docker load -i "${image}"
     fi
   done
 }

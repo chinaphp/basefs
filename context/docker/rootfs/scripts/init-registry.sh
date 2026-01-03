@@ -69,7 +69,7 @@ for image in "$image_dir"/*
 do
  if [ -f "${image}" ]
  then
-  "$CRI_BIN" load -q -i "${image}"
+  "$CRI_BIN" load -i "${image}"
  fi
 done
 }
