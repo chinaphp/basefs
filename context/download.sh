@@ -110,8 +110,8 @@ echo "download libseccomp version ${libseccomp_version}"
 curl -sLO "${libseccomp_tarball_url}" && mv "${libseccomp_tarball}" "rootfs/lib"
 
 echo "download nerdctl version ${nerdctl_version}"
-wget -q "https://github.com/containerd/nerdctl/releases/download/v${nerdctl_version}/nerdctl-${nerdctl_version}-linux-amd64.tar.gz" -O nerdctl-amd64.tar.gz && tar zxvf nerdctl-amd64.tar.gz -C "amd64/bin" --strip-components=1 && rm -f nerdctl-amd64.tar.gz
-wget -q "https://github.com/containerd/nerdctl/releases/download/v${nerdctl_version}/nerdctl-${nerdctl_version}-linux-arm64.tar.gz" -O nerdctl-arm64.tar.gz && tar zxvf nerdctl-arm64.tar.gz -C "arm64/bin" --strip-components=1 && rm -f nerdctl-arm64.tar.gz
+wget -q "https://github.com/containerd/nerdctl/releases/download/v${nerdctl_version}/nerdctl-${nerdctl_version}-linux-amd64.tar.gz" -O nerdctl-amd64.tar.gz && tar zxvf nerdctl-amd64.tar.gz -C "amd64/bin" && rm -f nerdctl-amd64.tar.gz
+wget -q "https://github.com/containerd/nerdctl/releases/download/v${nerdctl_version}/nerdctl-${nerdctl_version}-linux-arm64.tar.gz" -O nerdctl-arm64.tar.gz && tar zxvf nerdctl-arm64.tar.gz -C "arm64/bin" && rm -f nerdctl-arm64.tar.gz
 
 echo "download crictl version ${crictl_version}"
 wget -q "https://github.com/kubernetes-sigs/cri-tools/releases/download/v${crictl_version}/crictl-v${crictl_version}-linux-amd64.tar.gz" -O crictl-amd64.tar.gz && tar zxvf crictl-amd64.tar.gz -C "amd64/bin" && rm -f crictl-amd64.tar.gz
@@ -139,3 +139,7 @@ done
 
 echo "after download.sh . amd64/cri"
 echo "$(ls -la amd64/cri)"
+echo "amd64/bin content:"
+echo "$(ls -la amd64/bin)"
+echo "arm64/bin content:"
+echo "$(ls -la arm64/bin)"
