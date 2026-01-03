@@ -124,8 +124,14 @@ else
 fi
 sudo sed -i "s/\"cluster.alpha.sealer.io\/container-runtime-type\"=\"[^\"]*\"/\"cluster.alpha.sealer.io\/container-runtime-type\"=\"$cri\"/g" Kubefile
 sudo sed -i "s/\"cluster.alpha.sealer.io\/container-runtime-version\"=\"[^\"]*\"/\"cluster.alpha.sealer.io\/container-runtime-version\"=\"$runtime_version\"/g" Kubefile
-if [[ "$cri" == "containerd" ]]; then sudo sed -i "s/\/var\/run\/dockershim.sock/unix:\/\/\/run\/containerd\/containerd.sock/g" rootfs/etc/kubeadm.yml; fi
-if [[ "$cri" == "containerd" ]]; then sudo sed -i "s/\/var\/run\/dockershim.sock/unix:\/\/\/run\/containerd\/containerd.sock/g" rootfs/etc/kubeadm.yml.tmpl; fi
+if [[ "$cri" == "containerd" ]]; then
+  cri_socket="unix:///run/containerd/containerd.sock"
+else
+  cri_socket="/var/run/dockershim.sock"
+fi
+escaped_cri_socket=$(echo "$cri_socket" | sed 's/\//\\\//g')
+sudo sed -i "s/{{CRI_SOCKET}}/${escaped_cri_socket}/g" rootfs/etc/kubeadm.yml
+sudo sed -i "s/{{CRI_SOCKET}}/${escaped_cri_socket}/g" rootfs/etc/kubeadm.yml.tmpl
 sudo sed -i "s/kubeadm.k8s.io\/v1beta2/$kubeadmApiVersion/g" rootfs/etc/kubeadm.yml
 sudo sed -i "s/kubeadm.k8s.io\/v1beta2/$kubeadmApiVersion/g" rootfs/etc/kubeadm.yml.tmpl
 sudo ./"${ARCH}"/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml"
