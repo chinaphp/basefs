@@ -1,0 +1,9 @@
+[Unit]
+Description=CRI Interface for Docker Application Container Engine Socket
+PartOf=cri-docker.service
+
+[Socket]
+ListenStream=/var/run/cri-dockerd.sock
+
+[Install]
+WantedBy=sockets.target

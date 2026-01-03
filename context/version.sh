@@ -19,4 +19,6 @@ export containerd_version=${containerd_version:-"1.6.33"}
 
 export seautil_version=${seautil_version:-"0.9.1"}
 
-export docker_version=${docker_version:-"19.03.14"}
+export docker_version=${docker_version:-"26.1.4"}
+
+export cri_dockerd_version=${cri_dockerd_version:-"0.3.15"}

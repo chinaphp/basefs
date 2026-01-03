@@ -116,6 +116,17 @@ if ! utils_command_exists docker || ! utils_command_exists systemctl status dock
   systemctl enable docker.service
   systemctl restart docker.service
   cp "${scripts_path}"/../etc/daemon.json /etc/docker
+  
+  # install cri-dockerd
+  if [ -f "${scripts_path}"/../bin/cri-dockerd ]; then
+    cp "${scripts_path}"/../bin/cri-dockerd /usr/bin/cri-dockerd
+    chmod +x /usr/bin/cri-dockerd
+    cp "${scripts_path}"/../etc/cri-docker.service /etc/systemd/system/cri-docker.service
+    cp "${scripts_path}"/../etc/cri-docker.socket /etc/systemd/system/cri-docker.socket
+    systemctl daemon-reload
+    systemctl enable cri-docker.socket cri-docker.service
+    systemctl restart cri-docker.socket cri-docker.service
+  fi
   #mkdir -p /root/.docker/
   #cp "${scripts_path}"/../etc/docker-cli-config.json /root/.docker/config.json
   if [[ -n $1 && -n $2 ]]; then

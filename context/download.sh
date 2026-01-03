@@ -71,6 +71,13 @@ if [ "${cri}" = "docker" ]; then
   registry_tarball_amd64="docker-amd64-registry-image.tar.gz"
   registry_tarball_arm64="docker-arm64-registry-image.tar.gz"
   echo "download docker version ${docker_version}"
+
+  echo "download cri-dockerd version ${cri_dockerd_version}"
+  cridockerd_url="https://github.com/Mirantis/cri-dockerd/releases/download/v${cri_dockerd_version}"
+  cridockerd_tarball_amd64="cri-dockerd-${cri_dockerd_version}.amd64.tgz"
+  cridockerd_tarball_arm64="cri-dockerd-${cri_dockerd_version}.arm64.tgz"
+  wget -q "${cridockerd_url}/${cridockerd_tarball_amd64}" && tar zxvf "${cridockerd_tarball_amd64}" -C "amd64/bin" --strip-components=1 && rm -f "${cridockerd_tarball_amd64}"
+  wget -q "${cridockerd_url}/${cridockerd_tarball_arm64}" && tar zxvf "${cridockerd_tarball_arm64}" -C "arm64/bin" --strip-components=1 && rm -f "${cridockerd_tarball_arm64}"
 else
   containerd_url="https://github.com/containerd/containerd"
   cri_tarball_amd64="cri-containerd-${containerd_version:-}-linux-amd64.tar.gz"
