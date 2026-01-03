@@ -110,8 +110,8 @@ echo "download libseccomp version ${libseccomp_version}"
 curl -sLO "${libseccomp_tarball_url}" && mv "${libseccomp_tarball}" "rootfs/lib"
 
 echo "download nerdctl version ${nerdctl_version}"
-wget -q "${nerdctl_tarball_amd64_url}" && tar zxvf "${nerdctl_tarball_amd64}" -C "amd64/bin"
-wget -q "${nerdctl_tarball_arm64_url}" && tar zxvf "${nerdctl_tarball_arm64}" -C "arm64/bin"
+wget -q "${nerdctl_tarball_amd64_url}" && tar zxvf "${nerdctl_tarball_amd64}" -C "amd64/bin" --strip-components=1 || tar zxvf "${nerdctl_tarball_amd64}" -C "amd64/bin"
+wget -q "${nerdctl_tarball_arm64_url}" && tar zxvf "${nerdctl_tarball_arm64}" -C "arm64/bin" --strip-components=1 || tar zxvf "${nerdctl_tarball_arm64}" -C "arm64/bin"
 
 echo "download crictl version ${crictl_version}"
 wget -q "${crictl_tarball_amd64_url}" && tar zxvf "${crictl_tarball_amd64}" -C "amd64/bin"

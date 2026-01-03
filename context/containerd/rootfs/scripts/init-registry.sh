@@ -16,15 +16,16 @@ echo "this is init-registry.sh -----------------------------"
 set -e
 set -x
 
-# Detect CRI tool
-if command -v nerdctl >/dev/null 2>&1; then
+container="sealer-registry"
+rootfs="$(dirname "$(pwd)")"
+
+# Detect CRI tool using absolute path from rootfs
+if [ -f "$rootfs/bin/nerdctl" ]; then
+    CRI_BIN="$rootfs/bin/nerdctl"
+elif command -v nerdctl >/dev/null 2>&1; then
     CRI_BIN="nerdctl"
-elif [ -f "$(dirname "$0")/../bin/nerdctl" ]; then
-    CRI_BIN="$(dirname "$0")/../bin/nerdctl"
 elif [ -f "/usr/bin/nerdctl" ]; then
     CRI_BIN="/usr/bin/nerdctl"
-elif [ -f "/usr/local/bin/nerdctl" ]; then
-    CRI_BIN="/usr/local/bin/nerdctl"
 else
     CRI_BIN="docker"
 fi
@@ -40,8 +41,6 @@ REGISTRY_PORT="${1:-5000}"
 VOLUME="${2:-/var/lib/registry}"
 REGISTRY_DOMAIN="${3:-sea.hub}"
 
-container="sealer-registry"
-rootfs="$(dirname "$(pwd)")"
 config="$rootfs/etc/registry_config.yml"
 htpasswd="$rootfs/etc/registry_htpasswd"
 certs_dir="$rootfs/certs"

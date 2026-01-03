@@ -110,7 +110,7 @@ echo "run download.sh"
 sudo chmod +x version.sh download.sh && export kube_install_version="$k8s_version" && source version.sh
 ./download.sh "${cri}"
 
-sudo chmod +x amd64/bin/kube* && sudo chmod +x arm64/bin/kube*
+sudo chmod +x amd64/bin/* && sudo chmod +x arm64/bin/*
 #download v0.11.0
 # sudo wget https://github.com/sealerio/sealer/releases/download/v0.11.0/sealer-v0.11.0-linux-amd64.tar.gz && tar -xvf sealer-v0.11.0-linux-amd64.tar.gz -C /usr/bin
 sudo wget https://github.com/chinaphp/sealer/releases/download/v0.11.11/sealer-v0.11.11-linux-amd64.tar.gz && tar -xvf sealer-v0.11.11-linux-amd64.tar.gz -C /usr/bin
@@ -159,6 +159,9 @@ echo "$(ls -l rootfs/scripts)"
 
 echo "before build workdir: ${workdir}/context/rootfs/etc"
 echo "$(ls -l rootfs/etc)"
+
+# Ensure all scripts have execution permissions
+sudo chmod +x rootfs/scripts/*
 
 echo "$(sealer version)}"
 echo "build name: $buildName"

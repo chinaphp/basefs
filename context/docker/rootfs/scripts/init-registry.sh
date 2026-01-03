@@ -15,6 +15,25 @@
 
 set -e
 set -x
+
+# Detect CRI tool
+if command -v nerdctl >/dev/null 2>&1; then
+    CRI_BIN="nerdctl"
+elif [ -f "$(dirname "$0")/../bin/nerdctl" ]; then
+    CRI_BIN="$(dirname "$0")/../bin/nerdctl"
+elif [ -f "/usr/bin/nerdctl" ]; then
+    CRI_BIN="/usr/bin/nerdctl"
+elif command -v docker >/dev/null 2>&1; then
+    CRI_BIN="docker"
+elif [ -f "$(dirname "$0")/../bin/docker" ]; then
+    CRI_BIN="$(dirname "$0")/../bin/docker"
+elif [ -f "/usr/bin/docker" ]; then
+    CRI_BIN="/usr/bin/docker"
+else
+    CRI_BIN="docker"
+fi
+
+echo "Using CRI_BIN: $CRI_BIN"
 # prepare registry storage as directory
 # shellcheck disable=SC2046
 cd $(dirname "$0")
@@ -39,7 +58,7 @@ startRegistry() {
     while (( n <= 3 ))
     do
         echo "attempt to start registry"
-        (docker start $container && break) || (( n < 3))
+        ("$CRI_BIN" start $container && break) || (( n < 3))
         (( n++ ))
         sleep 3
     done
@@ -50,7 +69,7 @@ for image in "$image_dir"/*
 do
  if [ -f "${image}" ]
  then
-  docker load -q -i "${image}"
+  "$CRI_BIN" load -q -i "${image}"
  fi
 done
 }
@@ -59,7 +78,7 @@ check_registry() {
     n=1
     while (( n <= 3 ))
     do
-        registry_status=$(docker inspect --format '{{json .State.Status}}' sealer-registry)
+        registry_status=$("$CRI_BIN" inspect --format '{{json .State.Status}}' sealer-registry)
         if [[ "$registry_status" == \"running\" ]]; then
             break
         fi
@@ -75,8 +94,8 @@ check_registry() {
 load_images
 
 ## rm container if exist.
-if [ "$(docker ps -aq -f name=$container)" ]; then
-    docker rm -f $container
+if [ "$("$CRI_BIN" ps -aq -f name=$container)" ]; then
+    "$CRI_BIN" rm -f $container
 fi
 
 regArgs="-d --restart=always \
@@ -97,13 +116,13 @@ if [ -f $config ]; then
 fi
 # shellcheck disable=SC2086
 if [ -f $htpasswd ]; then
-    docker run $regArgs \
+    "$CRI_BIN" run $regArgs \
             -v $htpasswd:/htpasswd \
             -e REGISTRY_AUTH=htpasswd \
             -e REGISTRY_AUTH_HTPASSWD_PATH=/htpasswd \
             -e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" registry:2.7.1 || startRegistry
 else
-    docker run $regArgs registry:2.7.1 || startRegistry
+    "$CRI_BIN" run $regArgs registry:2.7.1 || startRegistry
 fi
 
 check_registry
