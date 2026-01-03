@@ -3,7 +3,8 @@ kind: InitConfiguration
 localAPIEndpoint:
   bindPort: 6443
 nodeRegistration:
-  criSocket: unix:///run/containerd/containerd.sock
+  # criSocket: unix:///run/containerd/containerd.sock
+  criSocket: /var/run/dockershim.sock
   taints: null
 
 ---
