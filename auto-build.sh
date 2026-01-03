@@ -112,8 +112,8 @@ sudo chmod +x version.sh download.sh && export kube_install_version="$k8s_versio
 
 sudo chmod +x amd64/bin/kube* && sudo chmod +x arm64/bin/kube*
 #download v0.11.0
-sudo wget https://github.com/sealerio/sealer/releases/download/v0.11.0/sealer-v0.11.0-linux-amd64.tar.gz && tar -xvf sealer-v0.11.0-linux-amd64.tar.gz -C /usr/bin
-# sudo wget https://github.com/chinaphp/sealer/releases/download/v0.11.11/sealer-v0.11.11-linux-amd64.tar.gz && tar -xvf sealer-v0.11.11-linux-amd64.tar.gz -C /usr/bin
+# sudo wget https://github.com/sealerio/sealer/releases/download/v0.11.0/sealer-v0.11.0-linux-amd64.tar.gz && tar -xvf sealer-v0.11.0-linux-amd64.tar.gz -C /usr/bin
+sudo wget https://github.com/chinaphp/sealer/releases/download/v0.11.11/sealer-v0.11.11-linux-amd64.tar.gz && tar -xvf sealer-v0.11.11-linux-amd64.tar.gz -C /usr/bin
 sudo sed -i "s/v1.19.8/$k8s_version/g" rootfs/etc/kubeadm.yml ##change k8s_version
 sudo sed -i "s/v1.19.8/$k8s_version/g" rootfs/etc/kubeadm.yml.tmpl ##change k8s_version
 sudo sed -i "s/v1.19.8/$k8s_version/g" Kubefile ##change k8s_version
