@@ -90,6 +90,17 @@ if [ -f "${scripts_path}/../etc/nerdctl.toml" ];then
   cp -f "${scripts_path}/../etc/nerdctl.toml" /etc/nerdctl/nerdctl.toml
 fi
 
+# install nerdctl/crictl if they exist in ../bin
+for bin in nerdctl crictl; do
+  if ! command -v "$bin" >/dev/null 2>&1; then
+    if [ -f "${scripts_path}/../bin/$bin" ]; then
+      echo "Installing $bin..."
+      chmod +x "${scripts_path}/../bin/$bin"
+      cp "${scripts_path}/../bin/$bin" /usr/bin/$bin
+    fi
+  fi
+done
+
 if command -v crictl >/dev/null 2>&1; then
   crictl config runtime-endpoint unix:///var/run/containerd/containerd.sock
 fi
