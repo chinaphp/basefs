@@ -11,7 +11,6 @@ jobs:
     permissions:
       issues: write
     steps:
-
       - name: Auto build image
         id: autobuild
         run: |
@@ -23,7 +22,7 @@ jobs:
           sudo git clone $REPOSITORY_HTTP_URL && cd basefs
           echo "clone source code complete."
           sudo touch autobuild.log && sudo chmod 666 autobuild.log && sudo bash auto-build.sh --username="${{secrets.REGISTRY_USERNAME}}" --password="${{secrets.REGISTRY_PASSWORD}}" $commentbody > autobuild.log && cat autobuild.log
-          echo "::set-output name=info::$(grep 'cri:' autobuild.log)"
+          echo "info=$(grep 'cri:' autobuild.log)" >> $GITHUB_OUTPUT
 
       - name: Success Commit
         uses: peter-evans/create-or-update-comment@v1
