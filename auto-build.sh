@@ -142,8 +142,9 @@ if [ "$(sudo ./"${ARCH}"/bin/kubeadm config images list --config rootfs/etc/kube
 sudo sed -i "s/registry.k8s.io/sea.hub:5000/g" rootfs/etc/kubeadm.yml.tmpl
 pauseImage=$(./"${ARCH}"/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml" 2>/dev/null | sed "/WARNING/d" | grep pause)
 
-echo "pauseImage: $pauseImage"
-if [ -f "rootfs/etc/dump-config.toml" ]; then sudo sed -i "s/sea.hub:5000\/pause:[^\"]*/$(echo "$pauseImage" | sed 's/\//\\\//g')/g" rootfs/etc/dump-config.toml; fi
+pauseVersion=$(echo "$pauseImage" | awk -F ':' '{print $2}')
+echo "pauseVersion: $pauseVersion"
+if [ -f "rootfs/etc/dump-config.toml" ]; then sudo sed -i "s/sea.hub:5000\/pause:[^\"]*/sea.hub:5000\/pause:${pauseVersion}/g" rootfs/etc/dump-config.toml; fi
 
 # fix
 if [ -f "rootfs/kubeadm.yaml" ];then
