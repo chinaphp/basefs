@@ -109,8 +109,30 @@ if [ -f "$config" ]; then
     -v $config:/etc/docker/registry/config.yml"
 fi
 
+# Check nerdctl vs containerd compatibility
+check_compatibility() {
+    if [[ "$CRI_BIN" == *"nerdctl"* ]]; then
+        local out
+        if out=$("$CRI_BIN" version 2>/dev/null); then
+            local n_version=$(echo "$out" | awk '/Client:/{getline; print $2}' | grep -oE '^v[0-9]+' || true)
+            local c_version=$(echo "$out" | awk '/containerd:/{getline; print $2}' | grep -oE '^v[0-9]+' || true)
+            
+            if [[ "${c_version}" == "v2" ]] && [[ "${n_version}" == "v1" || "${n_version}" == "v0" ]]; then
+                echo -e "\033[31m====================================================================================\033[0m"
+                echo -e "\033[31mWARNING: Incompatible Container Runtime version detected!\033[0m"
+                echo -e "\033[31mWARNING: You are running an older nerdctl (${n_version}.x) against containerd (${c_version}.x).\033[0m"
+                echo -e "\033[31mWARNING: This combination is known to cause severe container lifecycle errors,\033[0m"
+                echo -e "\033[31mWARNING: such as 'name is already in use' due to failed container cleanups.\033[0m"
+                echo -e "\033[31mWARNING: Strongly recommend downgrading containerd.io to v1.6.x/v1.7.x.\033[0m"
+                echo -e "\033[31m====================================================================================\033[0m"
+            fi
+        fi
+    fi
+}
+
 # Try to run registry with retries
 run_registry() {
+    check_compatibility
     local n=1
     while (( n <= 3 ))
     do
